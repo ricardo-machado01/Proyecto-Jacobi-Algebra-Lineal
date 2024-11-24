@@ -3,6 +3,7 @@ import numpy as np
 from tkinter import messagebox
 import validations as v
 import jacobi
+from jacobi import *
 
 def solve_equations():
     print("Resolviendo...")
@@ -17,6 +18,7 @@ def solve_equations():
 
         print(v.verify_initial_condition(equations))
 
+        jacobi_method(5,equations) #Función para resolver el Jacobi con k=iteraciones
         solution = ""
 
         show_eq = jacobi.show_equations(equations)
