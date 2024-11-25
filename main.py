@@ -1,6 +1,6 @@
 import tkinter as tk
+from tkinter import messagebox, scrolledtext
 import numpy as np
-from tkinter import messagebox
 import validations as v
 import jacobi
 from jacobi import *
@@ -16,8 +16,11 @@ def solve_equations():
         tolerance = 0.05
         max_iterations = 100
 
+        # Limpiar el área de texto antes de resolver
+        output_text.delete(1.0, tk.END)
+
         if v.verify_initial_condition(equations):
-            jacobi_method(16,equations) #Función para resolver el Jacobi con k=iteraciones
+            jacobi_method(16, output_text, equations) #Función para resolver el Jacobi con k=iteraciones
             show_eq = jacobi.show_equations(equations)
             messagebox.showinfo("Entrada", f"Ecuaciones: \n{show_eq}")
         else:
@@ -25,7 +28,7 @@ def solve_equations():
                 reordered = reorder_matrix(equations)
                 print("Matriz reordenada:")
                 print(reordered)
-                jacobi_method(16,reordered) #Función para resolver el Jacobi con k=iteraciones
+                jacobi_method(16,output_text, reordered) #Función para resolver el Jacobi con k=iteraciones
                 show_eq = jacobi.show_equations(reordered)
                 messagebox.showinfo("Entrada", f"Ecuaciones: \n{show_eq}")
             else:
@@ -42,7 +45,7 @@ def solve_equations():
 root = tk.Tk()
 root.title("Sistema de Ecuaciones 3x3 por método de Jacobi")
 root.geometry("500x300+800+200")
-root.resizable(False, False)
+#root.resizable(False, False)
 #root.configure(bg="light sky blue")
 
 # Crear un marco para centrar los widgets
@@ -98,6 +101,10 @@ entry_b3.grid(row=6, column=6, sticky="e")
 
 # Botón para resolver el sistema de ecuaciones
 tk.Button(frame, text="Resolver", command=solve_equations).grid(row=7, column=0, columnspan=7, pady=10)
+
+# Crear un área de texto para mostrar las iteraciones
+output_text = scrolledtext.ScrolledText(root, width=70, height=10)
+output_text.pack(pady=10)
 
 # Iniciar el bucle principal de la interfaz
 root.mainloop()

@@ -1,5 +1,6 @@
 #Importación de librerías
 import numpy as np
+import tkinter as tk
 import validations as v
 
 def show_equations(matrix):
@@ -51,7 +52,7 @@ def show_equations(matrix):
     
     return "\n".join(ecuaciones)
 
-def jacobi_method(k,equations,tolerance=0.05):
+def jacobi_method(k,output_text, equations, tolerance=0.05):
 
     # Vector inicial de Jacobi (0,0,0)
     Xi = np.array([[0],[0],[0]])
@@ -91,6 +92,20 @@ def jacobi_method(k,equations,tolerance=0.05):
         print(x1)
         print(tolerance_value)
         print()
+
+        # Mostrar la iteración en el área de texto
+        x_value = x1[0, 0]  #Valor de x
+        y_value = x1[1, 0]  #Valor de y
+        z_value = x1[2, 0]  #Valor de z
+
+        # Insertar los valores en output_text
+        output_text.insert(tk.END, 
+            f"Iteración número {iteration + 1}:\n"
+            f"x = {x_value:.6f}\n"
+            f"y = {y_value:.6f}\n"
+            f"z = {z_value:.6f}\n"
+            f"- Tolerancia: {tolerance_value:.6f}\n\n"
+        )
         
         Xi = x1
         iteration += 1
