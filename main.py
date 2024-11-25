@@ -16,14 +16,21 @@ def solve_equations():
         tolerance = 0.05
         max_iterations = 100
 
-        print(v.verify_initial_condition(equations))
-
-        jacobi_method(5,equations) #Función para resolver el Jacobi con k=iteraciones
-        solution = ""
-
-        show_eq = jacobi.show_equations(equations)
-
-        messagebox.showinfo("Entrada", f"Ecuaciones: {show_eq}")
+        if v.verify_initial_condition(equations):
+            jacobi_method(16,equations) #Función para resolver el Jacobi con k=iteraciones
+            show_eq = jacobi.show_equations(equations)
+            messagebox.showinfo("Entrada", f"Ecuaciones: \n{show_eq}")
+        else:
+            if v.can_reorder(equations):
+                reordered = reorder_matrix(equations)
+                print("Matriz reordenada:")
+                print(reordered)
+                jacobi_method(16,reordered) #Función para resolver el Jacobi con k=iteraciones
+                show_eq = jacobi.show_equations(reordered)
+                messagebox.showinfo("Entrada", f"Ecuaciones: \n{show_eq}")
+            else:
+                print("La matriz no se puede reordenar.")
+                messagebox.showinfo("Entrada", "La matriz del sistema no se puede reordenar para ser estrictamente diagonal dominante.")
 
         #solution = jacobi_method(equations, initial_guess, tolerance, max_iterations)
         #messagebox.showinfo("Solución", f"Solución: {solution}")

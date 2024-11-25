@@ -1,5 +1,6 @@
 #Importación de librerías
 import numpy as np
+import validations as v
 
 def show_equations(matrix):
         # Verificamos que la matriz tenga dimensiones 3x4
@@ -29,7 +30,7 @@ def show_equations(matrix):
         # Agregamos el término para y
         if b != 0:
             if abs(b) == 1:
-                terminos.append(f"y" if b > 0 or terminos else f"-y")
+                terminos.append(f"+y" if b > 0 or terminos else f"-y")
             elif b > 0 and terminos:
                 terminos.append(f"+ {b}y")
             else:
@@ -38,7 +39,7 @@ def show_equations(matrix):
         # Agregamos el término para z
         if c != 0:
             if abs(c) == 1:
-                terminos.append(f"z" if c > 0 or terminos else f"-z")
+                terminos.append(f"+z" if c > 0 or terminos else f"-z")
             elif c > 0 and terminos:
                 terminos.append(f"+ {c}z")
             else:
@@ -50,7 +51,7 @@ def show_equations(matrix):
     
     return "\n".join(ecuaciones)
 
-def jacobi_method(k,equations):
+def jacobi_method(k,equations,tolerance=0.05):
 
     # Vector inicial de Jacobi (0,0,0)
     Xi = np.array([[0],[0],[0]])
@@ -76,10 +77,35 @@ def jacobi_method(k,equations):
     # Matriz Diagonal de A (INVERSA DInv)
     DInv = np.linalg.inv(D)
 
-    #=================== JACOBI POR ITERACIONES===================
-    for i in range(k):
-        x1 = np.matmul(DInv,b) + np.matmul(DInv,(np.matmul(L+U,Xi)))
-        print(f"Interación número {i+1}")
+    # Inicializamos la tolerancia
+    tolerance_value = float('inf')  # Valor inicial alto para entrar en el bucle
+
+    iteration = 0
+    while tolerance_value >= tolerance:
+        x1 = np.matmul(DInv, b) + np.matmul(DInv, (np.matmul(L + U, Xi)))
+        
+        # Calcular la tolerancia
+        tolerance_value = np.sqrt(np.sum((x1 - Xi) ** 2)) 
+        
+        print(f"Iteración número {iteration + 1}") 
         print(x1)
+        print(tolerance_value)
         print()
+        
         Xi = x1
+        iteration += 1
+
+def reorder_matrix(matrix):
+     # Creamos una copia de la matriz para reordenar
+    reordered_matrix = np.array(matrix)
+
+    for i in range(3):
+        # Encontramos el índice del elemento con el mayor valor absoluto en la fila i
+        abs_values = [abs(reordered_matrix[i][j]) for j in range(3)]
+        max_index = abs_values.index(max(abs_values))
+
+        # Intercambiamos filas si es necesario
+        if max_index != i:
+            reordered_matrix[[i, max_index]] = reordered_matrix[[max_index, i]]
+
+    return reordered_matrix
